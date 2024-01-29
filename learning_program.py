@@ -2,6 +2,7 @@ from aiogram import Bot, Dispatcher, executor, types #pip install --force-reinst
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 import time
+import random
 
 # Берём токен для кода с телеграм бота https://t.me/BotFather
 bot = Bot('6794140977:AAFJkp-9Ha3Ha_PD2Bd1lYu4bC8guNJYhH4')
@@ -30,8 +31,8 @@ async def command_start(message: types.Message):
     await bot.send_message(chat_id=message.chat.id, text=start_bot, parse_mode='HTML', reply_markup=kb)
 
 help_cmd = """
--------------<b>🤓[Stady]</b>-----------------
-<em>Пайтонды басынан үйрену</em>
+-------------<b>🤓[Study]</b>-----------------
+<em>Pyhton нөлден бастап үйрену</em>
 
 -------------<b>📚[ҰБТ]</b>-----------------
 <em>ҰБТ дан келетін сұрақтарға дайындалу</em>
@@ -43,7 +44,7 @@ help_cmd = """
 <em>Кішігірім ойын жасау</em>
 
 -------------<b>📦[exe]</b>-----------------
-<em>Пайтон код ты прилажение етіп шығару</em>
+<em>Python тапсырмалар</em>
 """
 ###############################################################################################################
 
@@ -51,7 +52,7 @@ help_cmd = """
 async def command_help(message: types.Message):
     ff = ReplyKeyboardMarkup(resize_keyboard=True)
     h1 = KeyboardButton('/menu')
-    h2 = KeyboardButton('/🤓Stady')
+    h2 = KeyboardButton('/🤓Study')
     h3 = KeyboardButton('/📚ҰБТ')
     h4 = KeyboardButton('/💾Packages')
     h5 = KeyboardButton('/🕹Game-projeck')
@@ -139,13 +140,174 @@ async def command_help(message: types.Message):
     await bot.send_message(chat_id=message.chat.id, text='🤖 Бол жерде сізге керек кітаптан алынған үзінділер бар бол сұрақтар ҰБТ да келетініне сенімдімін !!', reply_markup=ffh)
 
 
+
+questions_data = [
+    {
+        "question": "Что покажет этот код?"
+        """
+        for j in 'Hi! I\'m mister Robert':
+	            if j == '\'':
+	            print("Найдено")
+	            break
+            else:
+	            print ("Готово")
+        """,
+        "options": ["A. Ошибку в коде", "B. Найдено и Готово", "C. Готово", "D. Найдено"],
+        "correct_answer": "D",
+        'explanation': "Найдено"
+    },
+    {
+        'question': "Какая библиотека отвечает за время?",
+        'options': ["A. time", "B. Time", "C. clock", "D. localtime"],
+        'correct_answer': "A",
+        'explanation': "библиотека time отвечает за время"
+    },
+    
+    {
+        'question': "Где правильно создана переменная?",
+        'options': ["A. int num = 2", "B. var num = 2", "C. num = float(2)", "D. Нет подходящего варианта"],
+        'correct_answer': "C",
+        'explanation': "num = float(2)"
+    },
+    {
+        'question': "Что такое Python?",
+        'options': ["A. Животное", "B. Программирование", "C. Игрушка", "D. Отрасль математики"],
+        'correct_answer': "B",
+        'explanation': "Программирование"
+        
+    },
+    {
+        'question': "Какой язык программирования наиболее популярен?",
+        'options': ["A. Python", "B. Java", "C. C++", "D. JavaScript"],
+        'correct_answer': "A",
+        'explanation': "Python"
+        
+    },
+    {
+        'question': "Сколько библиотек можно импортировать в один проект?",
+        'options': ["A. Не более 3", "B. Не более 10", "C. Не более 23", "D. Неограниченное количество"],
+        'correct_answer': "D",
+        'explanation': "Неограниченное количество"
+    },
+    {
+        'question': "Как получить данные от пользователя?",
+        'options': ["A. Использовать метод input()", "B. Использовать метод get()", "C. Использовать метод readLine()", "D. Использовать метод read()"],
+        'correct_answer': "A",
+        'explanation': "Использовать метод input()"
+    },
+    {
+        'question': "Сколько байт в одном килобайте?",
+        'options': ["A. 1000", "B. 1024", "C. 500", "D. 2048"],
+        'correct_answer': "B",
+        'explanation': "1024"
+    },
+    {
+        'question': "Что покажет этот код?"
+        """
+        for i in range(5):
+          if i % 2 == 0:
+            continue
+          print(i)
+        """,
+        'options': ["A. Ошибку из-за неверного вывода", "B. Числа: 1, 3 и 5", "C. Числа: 1 и 3", "D. Числа: 0, 2 и 4"],
+        'correct_answer': "C",
+        'explanation': "Числа: 1 и 3"
+    },
+    {
+        'question': "Какая функция выводит что-либо в консоль?",
+        'options': ["A. write();", "B. log();", "C. out();", "D. print();"],
+        'correct_answer': "D",
+        'explanation': "print();"
+    },
+    {
+        'question': "Что будет результатом этого кода?"
+        """
+        x = 23
+        num = 0 if x > 10 else 11
+        print(num)
+        """,
+        'options': ["A. 23", "B. 0", "C. Ошибка", "D. 11"],
+        'correct_answer': "B",
+        'explanation': "0"
+    },
+    {
+        'question': "Какие ошибки допущены в коде ниже?"
+        """
+        def factorial(n):
+          if n == 0:
+            return 1
+          else:
+            return n * factorial(n - 1)
+        print(factorial(5))
+        """,
+        'options': ["A. Функция не может вызывать сама себя", "B. Необходимо указать тип возвращаемого значения", "C. В коде нет никаких ошибок", "D. Функция всегда будет возвращать 1"],
+        'correct_answer': "C",
+        'explanation': "В коде нет никаких ошибок"
+    },
+    {
+        'question': "Что будет показано в результате?"
+        """
+        name = "John"
+        print('Hi, %s' % name)
+        """,
+        'options': ["A. Hi, John", "B. Ошибка", "C. Hi,", "D. Hi, name"],
+        'correct_answer': "A",
+        'explanation': "Hi, John"
+    },
+]
+
+user_progress = {}
+
+random.shuffle(questions_data)
+
 @dp.message_handler(commands=['💻code'])
 async def command_help(message: types.Message):
-    await bot.send_message(chat_id=message.chat.id, text='🤖 Кешірім өтінемін әзірге бол команда жұмыс істемейді ❌')
+    user_id = message.from_user.id
 
+    # Initialize or reset user progress
+    user_progress[user_id] = {
+        'current_question_index': 0,
+        'correct_answers': 0,
+    }
 
+    await bot.send_message(chat_id=message.chat.id, text='🤖')
+    current_question_index = user_progress[user_id]['current_question_index']
+    current_question = questions_data[current_question_index]
+    await bot.send_message(chat_id=message.chat.id, text=current_question["question"] + "\n" + "\n".join(current_question["options"]))
+    await bot.send_message(chat_id=message.chat.id, text="Введите букву вашего выбора:")
 
+@dp.message_handler(lambda message: message.text.upper() in ['A', 'B', 'C', 'D'])
+async def handle_user_answer(message: types.Message):
+    user_id = message.from_user.id
+    user_progress_data = user_progress.get(user_id)
 
+    if user_progress_data:
+        current_question_index = user_progress_data['current_question_index']
+        correct_answers = user_progress_data['correct_answers']
+
+        current_question = questions_data[current_question_index]
+        correct_answer = current_question["correct_answer"]
+
+        if message.text.upper() == correct_answer:
+            await bot.send_message(chat_id=message.chat.id, text="Верно! " + current_question["explanation"])
+            user_progress_data['correct_answers'] += 1
+        else:
+            await bot.send_message(chat_id=message.chat.id, text=f"Неверно. Правильный ответ: {correct_answer}.")
+
+        # Move to the next question
+        user_progress_data['current_question_index'] += 1
+
+        if current_question_index + 1 < len(questions_data):
+            next_question = questions_data[current_question_index + 1]
+            await bot.send_message(chat_id=message.chat.id, text="Следующий вопрос:")
+            await bot.send_message(chat_id=message.chat.id, text=next_question["question"] + "\n" + "\n".join(next_question["options"]))
+            await bot.send_message(chat_id=message.chat.id, text="Введите букву вашего выбора:")
+        else:
+            await bot.send_message(chat_id=message.chat.id, text=f"Викторина завершена. Вы ответили правильно на {correct_answers} из {len(questions_data)} вопросов.")
+            # Reset user progress after completing the quiz
+            user_progress.pop(user_id)
+    else:
+        await bot.send_message(chat_id=message.chat.id, text="Что-то пошло не так. Попробуйте начать викторину снова.")
 
 
 
@@ -196,7 +358,7 @@ async def command_help(message: types.Message):
     h2 = KeyboardButton('/🎥video')
     h3 = KeyboardButton('/📘book')
     ld.insert(h2).insert(h3).insert(h1)
-    stady = """
+    study = """
 ------------------------------------------------
 
 🎥[video] Ведио ролик арқылы курс өту
@@ -205,7 +367,7 @@ async def command_help(message: types.Message):
 
 ------------------------------------------------
 """
-    await bot.send_message(chat_id=message.chat.id, text=stady, reply_markup=ld)
+    await bot.send_message(chat_id=message.chat.id, text=study, reply_markup=ld)
 
 
 
@@ -401,7 +563,7 @@ async def command_help(message: types.Message):
 
 @dp.message_handler(commands=['💾Packages'])
 async def command_help(message: types.Message):
-    await bot.send_message(chat_id=message.chat.id, text='🤖 Кешірім өтінемін әзірге бол команда жұмыс істемейді ❌', parse_mode='HTML')
+    await bot.send_message(chat_id=message.chat.id, text='🤖[https://github.com/aespi808/tg_bot]', parse_mode='HTML')
 
 
 @dp.message_handler(commands=['🕹Game-projeck'])
@@ -653,7 +815,7 @@ while True:
 
 @dp.message_handler(commands=['📦exe'])
 async def command_help(message: types.Message):
-    await bot.send_message(chat_id=message.chat.id, text='🤖 Кешірім өтінемін әзірге бол команда жұмыс істемейді ❌', parse_mode='HTML')
+    await bot.send_message(chat_id=message.chat.id, text='🤖 [https://code.mu/ru/python/tasker/stager/]', parse_mode='HTML')
 
 
 
@@ -661,7 +823,7 @@ async def command_help(message: types.Message):
 async def command_help(message: types.Message):
     ff = ReplyKeyboardMarkup(resize_keyboard=True)
     h1 = KeyboardButton('/menu')
-    h2 = KeyboardButton('/🤓Stady')
+    h2 = KeyboardButton('/🤓Study')
     h3 = KeyboardButton('/📚ҰБТ')
     h4 = KeyboardButton('/💾Packages')
     h5 = KeyboardButton('/🕹Game-projeck')
